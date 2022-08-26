@@ -1,0 +1,761 @@
+#Everything linux
+
+Suggestions:
+ * list clusters with: kops get cluster
+ * edit this cluster with: kops edit cluster anoushkaravishankar.com
+ * edit your node instance group: kops edit ig --name=anoushkaravishankar.com nodes
+ * edit your master instance group: kops edit ig --name=anoushkaravishankar.com master-us-west-1a
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
+//mac resetting the terminal, newline issue
+stty sane
+
+#curl getting headers
+curl -I https://google.com
+
+Linux Machine: 10.12.87.83 root/C0pivia
+ssh ravi@10.12.87.83 (controller)
+ssh ravi@10.12.87.75 (Ansibel Controller)
+10.12.87.80 (Worker Node)
+
+Power Outlet, https://10.12.87.82/    admin/admin
+
+
+
+Linux 
+##
+grep 'string1\|string2' -R ./
+grep "string" -R <path>
+grep "pattern" -R  ./ --exclude=*.log
+find ./ -name <filename>
+sudo lsof -i -P -n |grep LISTEN
+netstat -tulpn |grep LISTEN
+df -k |grep dev
+cat > test1 <<-EOF
+adduser <ravi>
+passwd <ravi>
+hostnamectl set-hostname <host_name>
+usermod -aG wheel username
+source /etc/profile && go build -o kubectl-rsu
+ps -o psr <id>
+taskset -pc 3 27395
+tput rmcup //screen doesnt scroll
+printenv | grep FEC
+printenv |grep DPDK
+printenv | grep PCIDEVICE
+sudo lshw -c network -businfo //get device name and pci info
+lspci -D | grep 'Network\|Ethernet' 
+virsh nodedev-dumpxml pci_0000_8a_00_3
+more  /sys/bus/pci/devices/0000\:8a\:00.0/sriov_totalvfs
+ip link
+
+#vim
+Ctl+w /s - split horizontally
+ctl+w j/k - move between them
+ctl+w /v - vertical split
+ctk+w l/h- move to left and right
+
+[root@opennesswkn-1 ravi]# lspci | grep 0d8f
+56:00.0 Processing accelerators: Intel Corporation Device 0d8f (rev 01)
+
+[root@testpod1 /]# printenv | grep PCIDEVICE
+PCIDEVICE_INTEL_COM_INTEL_SRIOV_DPDK=0000:67:06.3
+PCIDEVICE_INTEL_COM_INTEL_SRIOV_NETDEVICE=0000:67:02.3
+
+#enabling vfio-pci
+echo 1 > /sys/module/vfio/parameters/enable_unsafe_noiommu_mode 
+
+Vagrant:
+Download Vagrant from site
+vagrant init ubuntu/xenial64
+vagrant up
+vagrant ssh
+ps -a (to get the port)
+scp -i ./.vagrant/machines/default/virtualbox/private_key -P 2222 text.txt vagrant@127.0.0.1:~
+scp -r -i ./.vagrant/machines/default/virtualbox/private_key -P 2222 vagrant@127.0.0.1:~/text2.txt ./
+
+scp -i ~/Documents/Code/Vagrant/.vagrant/machines/default/virtualbox/private_key -P 2222 -r ./O-RAN.WG4.MP-YANGs-v03.00 vagrant@127.0.0.1:~/Yang
+pyang -f tree o-ran-uplane-conf.yang |more
+pyang -f sample-xml-skeleton o-ran-uplane-conf.yang
+
+~$ ssh-keygen -f .ssh/id_rsa
+
+export KOPS_STATE_STORE=s3://kops-state-3440
+
+kops update cluster --name anoushkaravishankar.com --state=s3://kops-state-3440 --yes
+
+kops validate cluster anoushkaravishankar.com
+
+kops create secret --name anoushkaravishankar.com sshpublickey admin -i ~/.ssh/id_rsa.pub --state=s3://kops-state-3440
+
+kops create cluster --name=anoushkaravishankar.com --state=s3://kops-state-3440 --zones=us-west-1a --node-count=2 --node-size=t2.micro --master-size=t2.micro --dns-zone=Z09534763UG9K49EHOXL7
+
+kops delete cluster anoushkaravishankar.com --state=s3://kops-state-3440 --yes
+
+dig NS dev.aunoushkaravishankar.comm
+
+whois anoushkaravishankar.com
+
+kubectl get nodes
+
+docker:
+hub.docker.com ravi.ravindran@gmail.com/19SHa77!!
+docker stop <first two bytes of the id>
+docker ps 
+docker ps -a //those that are stopped too
+docker run -d -p 5000:5000 --name registry registry:2 //running the registry container on the host
+dockr image tag my-image localhost:5000/my-image
+docker push localhost:5000/my-image
+docker pull localhost:5000/my-image
+docker pull <ip>:5000/my-image
+
+docker build ./
+docker push 
+docker build . -t raviravindran/mytest-app
+docker build ./ -f Dockerfile -t
+docker tag ravi/test 10.12.87.83:30003/corning/test-ravi
+
+sudo usermod -G docker ubuntu
+docker push raviravindran/docker-demo
+docker login
+docker build ./
+sudo docker images
+docker tag 105f3ae396d6 raviravindran/docker-demo
+//docker cli from a remote host
+docker -H=<host-IP>:2375 run <imageid>
+docker run --cpus=.5 ubuntu
+docker run --memory=100m ubuntu
+docker run -d -rm -p <hostport>:8080  <image-name>
+docker exec <containerid> ps -eaf
+docker exec -it <containerid> bash
+docker top bc29ddcd9ec9
+docker tag flexran5g <harbor_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1127.19.1.rt56
+
+docker push <harbor_registry_ip_address>:<port>/intel/flexran5g:3.10.0-1127.19.1.rt56
+docker save 10.12.87.83:30003/corning/flexran5g-test:latest |gzip > flexran.tar.gz
+docker load -i <path to image tar file>
+docker load < busybox.tar.gz
+docker login 10.12.87.83:30003 -u admin -p Harbor12345
+
+
+aws
+aws login
+aws iam create-service-linked-role --aws-service-name "elasticloadbalancing.amazonaws.com"
+
+
+kubectl commands
+--
+kubectl delete jobs/fpga-opae-10.12.87.80-0b32
+kubectl describe jobs/fpga-opae-10.12.87.80-0b32
+kubectl get pods --all-namespaces
+kubectl get pod
+kubectl delete pods busybox
+kubectl describe pod <pod>
+kubectl describe service <service-name>
+kubectl expose pod <pod> --port=444 --name=frontend 
+kubectl expose pod <pod> --type=NodePort --name <Service-name> //creates Service
+kubectl port-forward <pod> 8080
+kubectl attach <podname> -i
+kubectl exec <pod> --command
+kubectl label pod <pod> mylabel=awsome
+kubectl run -i --tty busybox --image=busybox --restart=Never --sh ; nslookup <service-name>
+kubectl exec nodehelloworld.example.com -- ls /app
+kubectl exec nodehelloworld.example.com -- touch /app/text.txt
+kubectl logs -n kube-system $(kubectl get pods -n kube-system -o custom-columns=NAME:.metadata.name --field-selector spec.nodeName=node01 | grep ovs-ovn)
+kubectl get pods -o wide -A
+kubectl get network-attachment-definitions
+kubectl get events --namespace=default
+
+kubectl logs <podID> <containername>
+kubectl logs wordpress-deployment-7d4896594c-wpnxj wordpress
+
+kubectl get deployments
+kubectl get rs
+kubectl get pods --show-labels
+kubectl rollout status deployment/xxx
+- rollout history deployment/xx
+- rollout status
+
+kubectl rollout undo deployment/helloworld-deployment
+
+kubectl set image deployment/helloworld-deployment k8s-demo=k8s-demo:2
+kubectl set image deployment/helloworld-deployment k8s-demo=raviravindran/docker-demo:2
+kubectl edit deployment/xxx
+
+kubectl describe svc xxx
+
+kubectl logs <pod-name>
+
+kubectl exec database -i -t -- mysql -u root -p
+kubectl exec -it busybox1 -- ip a
+
+kubectl get nodes
+kubectl drain <node-id> --force
+kubectl get node opennesswkn-1 -o json | jq '.status.allocatable'
+kubectl get node opennesswkn-1 -o json | jq .metadata.annotations
+kubectl get node opennesswkn-1 -o json | jq .status.capacity
+kubectl get node opennesswkn-1 -o json | jq .metadata.labels
+kubectl get cmk-nodereport opennesswkn-1 -o json | jq .spec.report.description.pools.infra
+kubectl logs -n cmk-namespace cmk-isolate-pod -c cmk-isolate-exclusive | grep -i "cpu"
+kubectl get nodes -o json | jq .items[].metadata.labels
+kubectl taint nodes k8s-worker-skl cmk=true:NoSchedule-
+
+##helm
+
+helm install --set nodeName=opennesswkn-1 intel-fpga-cfg bb_config
+helm uninstall intel-fpga-cfg
+helm list
+
+#openness
+bash +x ./deploy_ne.sh -f flexran controller/nodes
+Requirement : CentOs -7.8.2003
+Edge/Controller : RT Kernel + Tuned Package -skip/ Linux opennesswkn-1 3.10.0-1127.19.1.rt56.1116.el7.x86_64
+
+
+//intel-dpdk for vfio-pci
+ip link //2 VFs under ens1f2
+modprobe vfio
+modprobe vfio-pci
+modprobe vfio-pci enable_sriov=1
+/opt/openness/dpdk-19.11.1/usertools/dpdk-devbind.py -b vfio-pci 8a:0a.0 8a:0a.1
+/opt/openness/dpdk-19.11.1/usertools/dpdk-devbind.py -s //gives the current binding
+kubectl get pods -o wide -A |grep sriov
+kubectl delete pod sriov-release-kube-sriov-device-plugin-amd64-x45mh -n kube-system //running on opnnesswkn-1
+ip link set ens1f2 down
+ip link set ens1f2 vf 0 vlan 2
+ip link set ens1f2 vf 1 vlan 1
+ip link set ens1f2 vf 0 mac 00:11:22:33:44:66
+ip link set ens1f2 vf 1 mac 00:11:22:33:44:66
+ip link set ens1f2 up
+
+//fpga configuration, replace the values file with the one in testApp
+helm install --set nodeName=opennesswkn-1 intel-fpga-cfg bb_config
+- /opt/openness/helm-charts/bb_config
+- verify logs :-  kubectl logs intel-fpga-cfg-opennesswkn-1
+
+For edge...change the configuration of dockerfile in opaefpga
+/opt/openness/edgenode/build/fpga_opae/Dockerfile 
+// comment out the proxy setting and export ISRT..(2 places)
+// sw version 20.2.4 -> install the pip==20.2.4 and intelhex manually and comment it out
+// alias of pip set to 2.7 in ~/.bashrc
+
+CMK configuration in /opt/openness/helm-charts/cpu-manager-for-kubernetes/values.yaml
+only one time initialization
+pod has to support /bin/bash
+"/opt/bin/cmk isolate --conf-dir=/etc/cmk --pool=exclusive centos" -> can be set to the container:q
+---
+//copy values.yml from ~/opennes../testApp
+image:
+  repository: 10.12.87.83:30003/intel/cmk (Change the repo)
+  tag: v1.4.1
+  pullPolicy: Always
+
+hosts:
+  all: true # if set to false, you need to provide list of nodes in the hosts.list
+  list: node1 # provide list of nodes to deploy CMK on, e.g. "node1,node2,node3", note: this setting is ignored if hosts.all is set to "true"
+
+sharedMode: packed
+numSharedCores: 2
+
+exclusiveMode: packed
+numExclusiveCores: 2
+
+webhook:
+  key:
+  cert:
+
+--
+initContainers:
+        - name: alpine
+          image: alpine:3.12.0
+          command: ["/bin/sh"]
+          args: ["-c", "cp /root/ca-certrequester/cert.pem /root/certs/root.pem"]
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "0.1"
+            limits:
+              cpu: "0.1"
+              memory: "128Mi"
+          volumeMounts:
+            - name: ca-certrequester
+              mountPath: /root/ca-certrequester
+            - name: certs
+              mountPath: /root/certs
+
+
+c++
+g++ -std=c++11 -o lambda LambdaExpressions.cpp 
+
+
+1. Comments:
+- Cell to ORU mapping
+- DU discovery of the vCU - follows the RN vCU model.
+- 5 mins reset, at a container level ?, who will restart ?, liveness probes ?, will need to be orchestrated again ?
+- If the DU is not configured by the CU ..nodeid ?
+- There will be keep-alive messages between SysMgr on the CU, and NodeMgr on the DU once the DU has joined the system. If the DU looses communication with the CU for 15 seconds, it will re-boot. If the CU looses communication with the DU for 15 seconds, it will depart the node from the system, and terminate all connections to the DU.
+- IP address of CU
+- Unique serial number of this DU instance
+- IP address of north-bound interface of the DU
+- IP address of south-bound interface of the DU
+- DHCP address pool for south-bound interface
+- DU device certificate
+- C/U/S/M plane information for each DU-ORU pair ?
+
+- SCOS will be released in a single TOSCA CSAR. This CSAR will include pod-specs for both the CU and DU CNFs, corresponding images and the associated helm charts.
+
+#NS-3
+
+./waf --run 'mm1-queue --lambda=5 --mu=6 --numPackets=100'
+
+export 'NS_LOG=*=level_info'
+
+$ NS_LOG="print-list" ./waf --run ...
+
+$ NS_LOG="foo"  # a token not matching any log-component
+
+NS_LOG="*=all|prefix_level" ./waf --run scratch-simulator
+export 'NS_LOG=LteHelper=level_all|prefix_all:LtePdcp=level_all|prefix_all:LtePdcpHeader=level_all|prefix_all'
+export 'NS_LOG=*=level_all|prefix_func|prefix_time'
+export NS_LOG=FirstScriptExample=info
+
+export 'NS_LOG=UdpEchoClientApplication=level_all|prefix_func|prefix_time:
+               UdpEchoServerApplication=level_all|prefix_func|prefix_time'
+
+
+
+$ ./waf configure --disable-werror --build-profile=debug --enable-examples --enable-tests
+Config::SetDefault ("ns3::LteHelper::UsePdschForCqiGeneration", BooleanValue (true));
+
+
+$./waf configur --disable-werror --disable-python
+
+./waf --run test-sim --command-template="gdb --args %s --broadcast --n=2"
+./waf --run test-sim --command-template="gdb --args %s"
+
+//get all the configurable attributes
+./waf --run lena-simple --command-template="%s --PrintAttributes=ns3::LteHelper"
+
+/waf --run scratch/myfirst > log.out 2>&1
+
+#lldb
+./waf --run test-sim --command-template="lldb %s"
+
+lldb -- a.out argument1
+breakpoint set -n main
+
+b main
+run 
+n  // Step over
+s //Step into
+c //continue
+print [var_name]
+fr v
+break set -f demo.cpp -l #
+b demo.cpp : #
+b class-name::function()
+
+b function_name()
+br list //list all the breakpoints
+
+br del <number of the breakpoint in the list> //removing breakpoints
+
+br del //removes all breakpoints
+
+p <value> //print variables
+
+frame variable
+
+fr s //shows where you are in the execution
+
+bt //backtrace, shows all the frames
+
+frame select <number>
+
+fr v //shows all the variables in the frame
+
+watchpoint set variable <globalVariable>
+
+//breaking out of loop
+thread until <line#>
+
+OR
+
+lldb> break set -o -l 25
+lldb> c
+
+//debugging
+LteRlcUm::DoNotifyTxOpportunity
+
+LteEnbMac::DoSubframeIndication
+
+LteFfrAlgorithm::SetDlBandwidth
+
+##Git
+
+<<<<<<< HEAD
+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
+=======
+github token : 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
+>>>>>>> refs/remotes/origin/main
+
+git config --global user.name "ravi3442"
+
+git config --global user.email "ravi.ravindran@gmail.com"
+
+git config --global user.email
+
+git config --global --list //list all the details of the github account locally
+
+git add *.html
+
+git rm --cached <filename> // removing name from the git
+
+git add . //to add all the files in the current folder
+
+
+git status //shows all the files in the staging and ones which are edited but not in the staging yet
+
+git commit -m 'changed app.js'
+
+git branch <name of the branch>
+
+//swiching to the new branch
+
+git checkout <name of the branch>
+
+//first create  a repo
+git remote add origin https://xxxx
+git push -u origin master
+
+//use existing user and password
+git config --global credential.helper cache
+
+//removing credential from the cache
+git config --global --unset credential.helper
+
+
+//sync you local repo with upstream
+git fetch upstream
+
+//pull the upstream new files to the local
+git pull
+
+merge
+
+'''
+create a new repository on the command line
+
+echo "# ns3-lte" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/ravi3442/ns3-lte.git
+git push -u origin main
+'''
+
+'''
+push an existing repository from the command line
+
+git remote add origin https://github.com/ravi3442/ns3-lte.git
+git branch -M main
+git push -u origin main
+,,
+
+#####Home MAC###
+
+Good Horizontal Model I like to apply to MEC  
+1.  A 10 minute 'What is Apache Kafka?' by Tim bergland (I highly recommend this) https://www.youtube.com/watch?v=06iRM1Ghr1k
+2.  Apache Kafka in the Telco Industry: https://www.kai-waehner.de/blog/2020/07/03/telco-ott-applications-with-apache-kafka-telecom-sector-oss-bss-hybrid-cloud/
+1.  A 10 minute 'What is Apache Kafka?' by Tim bergland (I highly recommend this) https://www.youtube.com/watch?v=06iRM1Ghr1k
+2.  Apache Kafka in the Telco Industry: https://www.kai-waehner.de/blog/2020/07/03/telco-ott-applications-with-apache-kafka-telecom-sector-oss-bss-hybrid-cloud/
+3.  Telco Use Cases white board. https://www.youtube.com/watch?v=s9aAtQz4zsI&t=306s
+
+Simulations
+--
+1. LSTM, CTTC NS-3 , RSRP/QoE of the user - QOE machine, optimizations for hysteresis, Time to trigger, a2/a3 events..from the network, LSTM scheme to suggest the optimal neighbor to go to, TCP file transfer applications..
+
+
+2. Kafka..
+
+3. LENA, radio, feature...handover for AI/ML feature...many deficiencies..
+
+4. Modelling the 5g-nr, and O-RAN architecture, LENA..based RRC and so on..
+
+https://github.com/wigig-tools/qd-realization
+
+https://quadriga-channel-model.de/#Documentation
+
+Mostafa.Tofighbakhsh@verizon.com
+
+
+
+Git:
+git config --global user.name "Ravi Ravindran"
+git init <projectname>
+
+
+
+Suggestions:
+ * list clusters with: kops get cluster
+ * edit this cluster with: kops edit cluster anoushkaravishankar.com
+ * edit your node instance group: kops edit ig --name=anoushkaravishankar.com nodes
+ * edit your master instance group: kops edit ig --name=anoushkaravishankar.com master-us-west-1a
+
+Vagrant:
+Download Vagrant from site
+vagrant init ubuntu/xenial64
+vagrant up
+vagrant ssh
+ps -a (to get the port)
+scp -i ./.vagrant/machines/default/virtualbox/private_key -P 2222 -rp <directory> vagrant@127.0.0.1:~
+scp -i ./.vagrant/machines/default/virtualbox/private_key -P 2222 vagrant@127.0.0.1:~/text2.txt ./
+
+pyang -f tree <xxx.yang> |more
+
+
+~$ ssh-keygen -f .ssh/id_rsa
+aws configure //for setting userid/pass
+
+export KOPS_STATE_STORE=s3://kops-state-3440
+
+#KOPS
+//check date on xenial
+sudo date 021814212021
+
+kops create cluster --name=anoushkaravishankar.com --state=s3://kops-state-3440 --zones=us-west-1a --node-count=2 --node-size=t2.micro --master-size=t2.micro --dns-zone=Z09534763UG9K49EHOXL7
+
+kops update cluster --name anoushkaravishankar.com --state=s3://kops-state-3440 --yes
+
+kops validate cluster anoushkaravishankar.com
+
+kops create secret --name anoushkaravishankar.com sshpublickey admin -i ~/.ssh/id_rsa.pub --state=s3://kops-state-3440
+
+kops delete cluster anoushkaravishankar.com --state=s3://kops-state-3440 --yes
+
+kops edit cluster anoushkaravishankar.com --state=s3://kops-state-3440 --yes
+
+#DNS
+
+dig NS dev.aunoushkaravishankar.comm
+whois anoushkaravishankar.com
+host -t NS anoushkaravishankar.com
+sudo apt-get install bind9-host
+
+
+#minikube
+minikube service <service-name> --url
+
+docker:
+#install docker.io
+xenial> apt-get install docker.io
+mac > brew install docker.io
+hub.docker.com ravi.ravindran@gmail.com/19SHa77!!
+login : raviravindran/19SHa77!!
+
+sudo usermod -G docker ubuntu
+docker push raviravindran/docker-demo
+docker login
+docker build ./
+sudo docker images
+docker tag 105f3ae396d6 raviravindran/docker-demo
+sudo docker tag f44f08b0577d raviravindran/docker-demo:2
+docker history <image>
+sudo docker run -it ubuntu bash //running a base ubuntu container, -i to terminate with ctrl+c, t is the tag
+
+#ansible
+ansible target1 -m ping -i inventory.txt
+
+cat> inventory.txt
+target1 ansible_host=<ip address> ansible_ssh_pass=osboxes.org
+#playing the ansible script
+ansible-playbook <playbook file name>
+
+aws
+===
+aws login
+aws iam create-service-linked-role --aws-service-name "elasticloadbalancing.amazonaws.com"
+aws ec2 describe-instances
+
+kubectl commands
+--
+#Changing Context
+kubectl config use-context YOURDESIREDCONTEXT
+kubectl config use-context minikube
+kubectl config view
+
+
+#Get
+kubectl get nodes
+kubectl drain <nodeid> //kubectl describe pod <pod-name> shows the node where the pod is
+kubectl get deployments
+kubectl get rs
+kubectl get pods --show-labels
+kubectl get pod
+kubectl get service -o wide
+kubectl get replicationcontroller
+source <(kubectl completion bash)
+kubect get pods -n kube-systemh
+
+#describe
+Kubectl describe nodes
+kubectl describe pod <pod>
+kubectl describe service <service-name>
+
+#delete
+kubectl delete pods busybox
+
+#Service
+kubectl expose pod <pod> --port=444 --name=frontend 
+kubectl expose pod <pod> --type=NodePort --name <Service-name> //creates Service
+kubectl port-forward <pod> 8080
+kubectl attach <podname> -i
+kubectl exec -i -t <pod> -c <container-name> -- bash
+kubectl label pod <pod> mylabel=awsome
+kubectl run -i --tty busybox --image=busybox --restart=Never --sh ; nslookup <service-name>
+kubectl exec nodehelloworld.example.com -- ls /app
+kubectl exec nodehelloworld.example.com -- touch /app/text.txt
+kubectl edit deploy/wordpress-deployment
+kubectl run -i --tty --image busybox:1.28 dns-test --restart=Never --rm
+curl <LB>
+
+#Config Map
+$kubectl create configmap app-config --from0-file=app.properties
+$ cat /etc/nginx/conf.d/reverseproxy.conf
+
+//watch the creation of a pod
+kubectl get pods -w -l app=nginx
+
+
+#LOGS
+kubectl logs <pod-name>
+kubectl logs <podID> <containername>
+kubectl logs wordpress-deployment-7d4896594c-wpnxj wordpress
+
+
+kubectl rollout status deployment/xxx
+- rollout history deployment/xx
+- rollout status
+
+kubectl rollout undo deployment/helloworld-deployment
+kubectl set image deployment/helloworld-deployment k8s-demo=k8s-demo:2
+kubectl set image deployment/helloworld-deployment k8s-demo=raviravindran/docker-demo:2
+kubectl edit deployment/xxx
+
+kubectl describe svc xxx
+
+---
+
+command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          # Generate mysql server-id from pod ordinal index.
+          [[ `hostname` =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          echo [mysqld] > /mnt/conf.d/server-id.cnf
+          # Add an offset to avoid reserved server-id=0 value.
+          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
+          # Copy appropriate conf.d files from config-map to emptyDir.
+          if [[ $ordinal -eq 0 ]]; then
+            cp /mnt/config-map/primary.cnf /mnt/conf.d/
+          else
+            cp /mnt/config-map/replica.cnf /mnt/conf.d/
+          fi          
+
+
+--
+
+
+
+kubectl exec database -i -t -- mysql -u root -p
+
+kubectl get nodes
+kubectl drain <node-id> --force
+
+#helm
+helm init/rest/install/search/list/upgrade/rollback
+
+
+c++
+g++ -std=c++11 -o lambda LambdaExpressions.cpp 
+
+
+unix
+--
+cat <<EOF > app.properties # will take input from terminal till EOF is hit
+echo -n "text" > [file]
+echo -n "text" |base64
+echo "base64pass" | base64 --decode
+
+cat /etc/os-release
+uname -r
+cat /proc/cmdline
+lscpuß
+
+Container
+--
+taskset -cpa 1
+
+#conda
+conda create -n spyder-env spyder=4
+conda create -n spyder-env spyder=4 numpy scipy pandas matplotlib sympy cython
+
+#NS3
+./waf configure --disable-werror --build-profile=debug --enable-examples --enable-tests
+
+lldb  
+
+lldb -- a.out argument1
+breakpoint set -n main
+
+b main
+run 
+n  // Step over
+s //Step into
+c //continue
+print [var_name]
+fr v
+break set -f demo.cpp -l #
+b demo.cpp : #
+b class-name::function()
+b function_name()
+br list //list all the breakpoints
+
+br del <number of the breakpoint in the list> //removing breakpoints
+
+br del //removes all breakpoints
+
+br line#
+
+p <value>
+
+frame variable
+
+fr s //shows where you are in the execution
+
+bt //backtrace
+
+frame select <number>
+
+fr v //shows all the variables in the frame
+
+watchpoint set variable <globalVariable>
+
+
+
+
+
+
+
+
