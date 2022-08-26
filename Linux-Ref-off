@@ -401,11 +401,6 @@ LteFfrAlgorithm::SetDlBandwidth
 
 ##Git
 
-<<<<<<< HEAD
-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
-=======
-github token : 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
->>>>>>> refs/remotes/origin/main
 
 git config --global user.name "ravi3442"
 
@@ -602,7 +597,8 @@ kubectl drain <nodeid> //kubectl describe pod <pod-name> shows the node where th
 kubectl get deployments
 kubectl get rs
 kubectl get pods --show-labels
-kubectl get pod
+kubectl get pods -all-namespaces |grep <search
+>
 kubectl get service -o wide
 kubectl get replicationcontroller
 source <(kubectl completion bash)
@@ -610,7 +606,7 @@ kubect get pods -n kube-systemh
 
 #describe
 Kubectl describe nodes
-kubectl describe pod <pod>
+kubectl describe pod <pod> -n <namespace>
 kubectl describe service <service-name>
 
 #delete
