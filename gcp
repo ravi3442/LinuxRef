@@ -15,15 +15,103 @@ To install or remove components at your current SDK version [399.0.0], run:
 # authtenticate to teh gcp
 gcloud container clusters get-credentials --region us-central1 nephio
 
+use gcloud password : 78SHa77!$
+
 gcloud services enable container.googleapis.com
 
 gcloud container clusters create-auto --region us-central1 nephio
 
 github
-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
+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
 
+##kpt
 
+kpt live status wordpress
+
+kpt live destroy wordpress
+
+kpt live apply wordpress --reconcile-timeout=2m
+
+#kpt alpha for PORCh related apis
 kpt alpha repo get
+
+kpt fn eval wordpress -i set-labels:v0.1 -- env=dev
+
+kpt pkg tree wordpress/
+
+#initializing a package
+$ kpt pkg init awesomeapp
+
+//imeprative, one time instead of including it as part of the pipeline in the kpt file
+kpt fn eval wordpress --image gcr.io/kpt-fn/set-namespace:v0.1 -- namespace=mywordpress
+
+//search for a particular field
+kpt fn eval wordpress -i search-replace:v0.1 -- 'by-path=spec.selector.tier'
+
+//get the KRM resource for the repo <kpt-samples>
+kpt alpha repo get kpt-samples --namespace default -oyaml
+
+kubectl get repository
+
+//r: remote 
+kpt alpha rpkg get
+
+//unregister repo
+kpt alpha repo unregister kpt-samples -ndefault
+
+//register repo
+GITHUB_USERNAME=<GitHub Username>
+GITHUB_TOKEN=<GitHub Personal Access Token>
+REPOSITORY_ADDRESS=<Your Repository URL>
+
+
+//register a repo
+$ kpt alpha repo register \
+  --namespace default \
+  --name deployments \
+  --deployment \
+  --repo-basic-username=${GITHUB_USERNAME} \
+  --repo-basic-password=${GITHUB_TOKEN} \
+  ${REPOSITORY_ADDRESS}
+
+//cloning a package
+kpt alpha rpkg clone \
+  kpt-samples-afcf4d1fac605a60ba1ea4b87b5b5b82e222cb69 \
+  istions \
+  --repository=deployments -ndefault
+
+# Propose the package draft to be published
+$ kpt alpha rpkg propose deployments-c32b851b591b860efda29ba0e006725c8c1f7764 -ndefault
+deployments-c32b851b591b860efda29ba0e006725c8c1f7764 proposed
+
+# Approve the proposed package revision for publishing
+$ kpt alpha rpkg approve deployments-c32b851b591b860efda29ba0e006725c8c1f7764 -ndefault
+deployments-c32b851b591b860efda29ba0e006725c8c1f7764 approved
+
+# Reject a proposal to publish a my-bucket/v1
+$ kpt alpha rpkg reject deployments-8baf4892d6bdeda0f26ef4b1088fddb85c5a2486 -ndefault
+deployments-8baf4892d6bdeda0f26ef4b1088fddb85c5a2486 rejected
+
+# Confirm the package is published:
+$ kpt alpha rpkg get deployments-c32b851b591b860efda29ba0e006725c8c1f7764 -ndefault
+
+
+kpt alpha repo register --namespace default \
+  https://github.com/GoogleContainerTools/kpt-samples.git
+
+
+$ kpt fn render wordpress
+
+
+#deleting package from your clluster
+kpt live destroy
+
+# Creating a package
+
+# Register a sample Git repository:
+$ kpt alpha repo register --namespace default \
+  https://github.com/GoogleContainerTools/kpt-samples.git
+
 
 kubectl get pods --all-namespaces | grep config
 
