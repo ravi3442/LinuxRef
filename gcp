@@ -21,8 +21,6 @@ gcloud services enable container.googleapis.com
 
 gcloud container clusters create-auto --region us-central1 nephio
 
-github
-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
 
 ##kpt
 
