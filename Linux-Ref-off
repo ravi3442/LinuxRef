@@ -431,12 +431,19 @@ git checkout <name of the branch>
 git remote add origin https://xxxx
 git push -u origin master
 
+//check remote directory
+git remote -v
+
+
 //use existing user and password
 git config --global credential.helper cache
 
 //removing credential from the cache
 git config --global --unset credential.helper
 
+
+//getting the upstream remote repo
+git remote -v
 
 //sync you local repo with upstream
 git fetch upstream
@@ -457,6 +464,10 @@ git branch -M main
 git remote add origin https://github.com/ravi3442/ns3-lte.git
 git push -u origin main
 '''
+
+# error: failed to push some refs to 'https://github.com/ravi3442/Python.git'
+git pull --rebase origin main
+git push origin main
 
 
 
